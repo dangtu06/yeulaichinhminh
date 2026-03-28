@@ -620,105 +620,154 @@ const CoachSection = () => {
   );
 };
 
-const RegistrationForm = () => (
-  <section className="pt-24 pb-12 bg-surface-container-low" id="dang-ky">
-    <div className="max-w-7xl mx-auto px-6">
-      <div className="max-w-5xl mx-auto bg-surface-container-lowest rounded-[3rem] overflow-hidden shadow-2xl flex flex-col md:flex-row">
-        <div className="md:w-1/2 bg-primary p-12 text-on-primary flex flex-col justify-center">
-          <h2 className="text-4xl font-bold mb-6">Đăng Ký Tham Dự</h2>
-          <p className="text-lg opacity-80 mb-8 leading-relaxed">Đã đến lúc yêu lại chính mình – Phá vỡ vỏ bọc để chạm đến bình an nội tâm!</p>
-          <ul className="space-y-4">
-            {[
-              "Workshop Online 3 buổi qua Zoom",
-              "Tư vấn lộ trình chữa lành phù hợp",
-              "Giá ưu đãi hôm nay: MIỄN PHÍ"
-            ].map((text, i) => (
-              <li key={i} className="flex items-center gap-3">
-                <CheckCircle2 className="text-secondary-container" fill="currentColor" />
-                {text}
-              </li>
-            ))}
-          </ul>
-          <motion.div 
-            initial={{ scale: 0.98 }}
-            animate={{ scale: 1 }}
-            transition={{ repeat: Infinity, duration: 2, repeatType: "reverse" }}
-            className="mt-10 p-8 bg-white/10 rounded-2xl border-2 border-secondary-container/30 shadow-[0_0_30px_rgba(242,125,38,0.15)] relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 bg-secondary-container text-on-secondary-container text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider animate-pulse">
-              Duy nhất hôm nay
-            </div>
-            <p className="text-sm opacity-70 mb-2 font-medium">Giá gốc chương trình:</p>
-            <p className="text-xl sm:text-2xl line-through opacity-50 font-bold">1.500.000 VNĐ</p>
-            <p className="text-3xl sm:text-4xl text-secondary-container font-black mt-1 drop-shadow-sm">MIỄN PHÍ 100%</p>
-            <p className="text-[10px] opacity-50 mt-2 italic">* Số lượng có hạn cho 50 người đăng ký đầu tiên</p>
-          </motion.div>
-        </div>
-        <div className="md:w-1/2 p-12">
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-primary ml-1">Tên của bạn</label>
-              <input 
-                type="text" 
-                className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none" 
-                placeholder="Họ và Tên" 
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-primary ml-1">Email</label>
-                <input 
-                  type="email" 
-                  className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none" 
-                  placeholder="Địa chỉ email" 
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-primary ml-1">Số điện thoại</label>
-                <input 
-                  type="tel" 
-                  className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none" 
-                  placeholder="090..." 
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-primary ml-1">Vấn đề bạn đang gặp phải</label>
-              <textarea 
-                className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none resize-none" 
-                placeholder="Chia sẻ câu chuyện của bạn..." 
-                rows={4}
-              />
-            </div>
-            <button 
-              type="button"
-              onClick={() => {
-                // @ts-ignore
-                window.dataLayer = window.dataLayer || [];
-                // @ts-ignore
-                window.dataLayer.push({
-                  'event': 'registration_button_click',
-                  'button_name': 'Hoàn Tất Đăng Ký'
-                });
-                alert("Cảm ơn bạn đã đăng ký! Chúng tôi sẽ liên hệ sớm nhất.");
-              }}
-              className="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary py-4 rounded-full font-bold text-base sm:text-lg hover:shadow-lg active:scale-95 transition-all"
+const RegistrationForm = ({ onSuccess }: { onSuccess: () => void }) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [problem, setProblem] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (!name || !phone) {
+      alert("Vui lòng nhập tên và số điện thoại.");
+      return;
+    }
+    setIsSubmitting(true);
+    
+    // GOOGLE APPS SCRIPT WEB APP URL (Người dùng tự điền sau)
+    const scriptURL = 'YOUR_WEB_APP_URL_HERE';
+    
+    try {
+      if (scriptURL !== 'YOUR_WEB_APP_URL_HERE') {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('phone', phone);
+        formData.append('problem', problem);
+        
+        await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
+      } else {
+        console.warn("Chưa cấu hình Google Apps Script URL. Giả lập thành công.");
+      }
+      
+      // @ts-ignore
+      window.dataLayer = window.dataLayer || [];
+      // @ts-ignore
+      window.dataLayer.push({
+        'event': 'registration_button_click',
+        'button_name': 'Hoàn Tất Đăng Ký'
+      });
+      
+      onSuccess();
+    } catch (error) {
+      console.error('Error!', error);
+      alert("Có lỗi xảy ra, vui lòng thử lại sau.");
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <section className="pt-24 pb-12 bg-surface-container-low" id="dang-ky">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-5xl mx-auto bg-surface-container-lowest rounded-[3rem] overflow-hidden shadow-2xl flex flex-col md:flex-row">
+          <div className="md:w-1/2 bg-primary p-12 text-on-primary flex flex-col justify-center">
+            <h2 className="text-4xl font-bold mb-6">Đăng Ký Tham Dự</h2>
+            <p className="text-lg opacity-80 mb-8 leading-relaxed">Đã đến lúc yêu lại chính mình – Phá vỡ vỏ bọc để chạm đến bình an nội tâm!</p>
+            <ul className="space-y-4">
+              {[
+                "Workshop Online 3 buổi qua Zoom",
+                "Tư vấn lộ trình chữa lành phù hợp",
+                "Giá ưu đãi hôm nay: MIỄN PHÍ"
+              ].map((text, i) => (
+                <li key={i} className="flex items-center gap-3">
+                  <CheckCircle2 className="text-secondary-container" fill="currentColor" />
+                  {text}
+                </li>
+              ))}
+            </ul>
+            <motion.div 
+              initial={{ scale: 0.98 }}
+              animate={{ scale: 1 }}
+              transition={{ repeat: Infinity, duration: 2, repeatType: "reverse" }}
+              className="mt-10 p-8 bg-white/10 rounded-2xl border-2 border-secondary-container/30 shadow-[0_0_30px_rgba(242,125,38,0.15)] relative overflow-hidden"
             >
-              Hoàn Tất Đăng Ký (30 Giây)
-            </button>
-            <div className="mt-4 flex flex-wrap justify-center items-center gap-x-3 gap-y-2 text-[11px] text-primary/40 font-medium">
-              <span className="flex items-center gap-1">🔒 Bảo mật tuyệt đối</span>
-              <span className="text-primary/10">•</span>
-              <span className="flex items-center gap-1 text-secondary/60">✓ Miễn phí 100%</span>
-              <span className="text-primary/10">•</span>
-              <span className="flex items-center gap-1">✓ Không ràng buộc</span>
-            </div>
-          </form>
+              <div className="absolute top-0 right-0 bg-secondary-container text-on-secondary-container text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider animate-pulse">
+                Duy nhất hôm nay
+              </div>
+              <p className="text-sm opacity-70 mb-2 font-medium">Giá gốc chương trình:</p>
+              <p className="text-xl sm:text-2xl line-through opacity-50 font-bold">1.500.000 VNĐ</p>
+              <p className="text-3xl sm:text-4xl text-secondary-container font-black mt-1 drop-shadow-sm">MIỄN PHÍ 100%</p>
+              <p className="text-[10px] opacity-50 mt-2 italic">* Số lượng có hạn cho 50 người đăng ký đầu tiên</p>
+            </motion.div>
+          </div>
+          <div className="md:w-1/2 p-12">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-primary ml-1">Tên của bạn <span className="text-red-500">*</span></label>
+                <input 
+                  type="text" 
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none" 
+                  placeholder="Họ và Tên" 
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-primary ml-1">Email</label>
+                  <input 
+                    type="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none" 
+                    placeholder="Địa chỉ email" 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-primary ml-1">Số điện thoại <span className="text-red-500">*</span></label>
+                  <input 
+                    type="tel" 
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none" 
+                    placeholder="090..." 
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-primary ml-1">Vấn đề bạn đang gặp phải</label>
+                <textarea 
+                  value={problem}
+                  onChange={(e) => setProblem(e.target.value)}
+                  className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none resize-none" 
+                  placeholder="Chia sẻ câu chuyện của bạn..." 
+                  rows={4}
+                />
+              </div>
+              <button 
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary py-4 rounded-full font-bold text-base sm:text-lg hover:shadow-lg active:scale-95 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Đang xử lý..." : "Hoàn Tất Đăng Ký (30 Giây)"}
+              </button>
+              <div className="mt-4 flex flex-wrap justify-center items-center gap-x-3 gap-y-2 text-[11px] text-primary/40 font-medium">
+                <span className="flex items-center gap-1">🔒 Bảo mật tuyệt đối</span>
+                <span className="text-primary/10">•</span>
+                <span className="flex items-center gap-1 text-secondary/60">✓ Miễn phí 100%</span>
+                <span className="text-primary/10">•</span>
+                <span className="flex items-center gap-1">✓ Không ràng buộc</span>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const Footer = () => (
   <footer className="w-full pt-12 pb-8 px-6 bg-surface-container-low border-t border-primary/5">
@@ -853,18 +902,84 @@ const Testimonials = () => {
   );
 };
 
+const ThankYouPage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <section className="min-h-screen pt-32 pb-24 bg-surface flex items-center justify-center relative overflow-hidden">
+      <div className="absolute inset-0 opacity-30 pointer-events-none">
+        <div className="absolute top-1/4 -left-20 w-96 h-96 rounded-full bg-secondary/10 blur-[80px]" />
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 rounded-full bg-primary/10 blur-[80px]" />
+      </div>
+
+      <div className="max-w-2xl mx-auto px-6 relative z-10 text-center space-y-8">
+        <motion.div
+           initial={{ scale: 0 }}
+           animate={{ scale: 1 }}
+           transition={{ type: "spring", stiffness: 200, damping: 20 }}
+           className="w-24 h-24 mx-auto bg-secondary/10 text-secondary rounded-full flex items-center justify-center mb-8"
+        >
+          <CheckCircle2 size={48} />
+        </motion.div>
+        
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-4xl md:text-5xl font-bold text-primary leading-tight"
+        >
+          Cảm ơn bạn đã <span className="text-secondary italic font-light">đăng ký!</span>
+        </motion.h1>
+        
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-xl text-on-surface-variant leading-relaxed"
+        >
+          Chúng tôi đã ghi nhận thông tin của bạn. Đội ngũ Quantum Mind Academy sẽ sớm liên hệ để hỗ trợ bạn trên hành trình yêu lại chính mình.
+        </motion.p>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="pt-8"
+        >
+          <button 
+            onClick={() => window.location.reload()}
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-primary-container text-on-primary px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all"
+          >
+            Quay lại trang chủ <ArrowRight size={20} />
+          </button>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 export default function App() {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   return (
     <div className="min-h-screen selection:bg-primary-container selection:text-on-primary-container">
       <Navbar />
-      <Hero />
-      <SelfConnectionCheck />
-      <TargetAudience />
-      <Benefits />
-      <DifferenceSection />
-      <CoachSection />
-      <Testimonials />
-      <RegistrationForm />
+      {isSubmitted ? (
+        <ThankYouPage />
+      ) : (
+        <>
+          <Hero />
+          <SelfConnectionCheck />
+          <TargetAudience />
+          <Benefits />
+          <DifferenceSection />
+          <CoachSection />
+          <Testimonials />
+          <RegistrationForm onSuccess={() => setIsSubmitted(true)} />
+        </>
+      )}
       <Footer />
     </div>
   );
