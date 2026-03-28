@@ -138,7 +138,7 @@ const Hero = () => {
               transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
               className="block bg-gradient-to-r from-primary via-primary-container to-tertiary bg-clip-text text-transparent pb-2 md:pb-4 drop-shadow-sm"
             >
-              Hành Trình Chữa Lành <span className="sm:whitespace-nowrap">Từ Bên Trong</span>
+              Kết Nối Bản Thể <span className="sm:whitespace-nowrap">Cảm Xúc</span>
             </motion.span>
           </h1>
           <p className="text-xl text-on-surface-variant max-w-2xl leading-relaxed">
