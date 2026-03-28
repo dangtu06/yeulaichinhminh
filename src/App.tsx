@@ -635,21 +635,17 @@ const RegistrationForm = ({ onSuccess }: { onSuccess: () => void }) => {
     }
     setIsSubmitting(true);
     
-    // GOOGLE APPS SCRIPT WEB APP URL (Người dùng tự điền sau)
-    const scriptURL = 'YOUR_WEB_APP_URL_HERE';
+    // GOOGLE APPS SCRIPT WEB APP URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbybcRUi3xdzP7WSRrp-OEd4ry9HX3DuG2SydF3yeh4UUKQIWHKKZQ5USNiwVn-pk6BG/exec';
     
     try {
-      if (scriptURL !== 'YOUR_WEB_APP_URL_HERE') {
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('email', email);
-        formData.append('phone', phone);
-        formData.append('problem', problem);
-        
-        await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
-      } else {
-        console.warn("Chưa cấu hình Google Apps Script URL. Giả lập thành công.");
-      }
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('phone', phone);
+      formData.append('problem', problem);
+      
+      await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
       
       // @ts-ignore
       window.dataLayer = window.dataLayer || [];
