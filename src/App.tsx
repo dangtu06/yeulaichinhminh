@@ -901,6 +901,9 @@ const Testimonials = () => {
 const ThankYouPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
+    const prevTitle = document.title;
+    document.title = "Đăng Ký Thành Công - Yêu Lại Chính Mình";
+    return () => { document.title = prevTitle; };
   }, []);
 
   return (
@@ -926,7 +929,7 @@ const ThankYouPage = () => {
           transition={{ delay: 0.2 }}
           className="text-4xl md:text-5xl font-bold text-primary leading-tight"
         >
-          Cảm ơn bạn đã <span className="text-secondary italic font-light">đăng ký!</span>
+          Đăng Ký <span className="text-secondary italic font-light">Thành Công!</span>
         </motion.h1>
         
         <motion.p 
@@ -935,7 +938,7 @@ const ThankYouPage = () => {
           transition={{ delay: 0.3 }}
           className="text-xl text-on-surface-variant leading-relaxed"
         >
-          Chúng tôi đã ghi nhận thông tin của bạn. Đội ngũ Quantum Mind Academy sẽ sớm liên hệ để hỗ trợ bạn trên hành trình yêu lại chính mình.
+          Chúng tôi đã ghi nhận thông tin của bạn. Đội ngũ <strong>Yêu Lại Chính Mình</strong> sẽ sớm liên hệ để hỗ trợ bạn trên hành trình kết nối bản thể cảm xúc.
         </motion.p>
         
         <motion.div 
