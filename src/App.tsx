@@ -28,6 +28,7 @@ import {
   Quote
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { HashRouter, Routes, Route, useNavigate } from "react-router-dom";
 import coachPortrait from "./coach-portrait.png";
 import logoQma from "./logo-qma.png";
 import tiktokLogo from "./tiktok-logo.png";
@@ -959,27 +960,42 @@ const ThankYouPage = () => {
   );
 };
 
-export default function App() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+function LandingPage() {
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen selection:bg-primary-container selection:text-on-primary-container">
       <Navbar />
-      {isSubmitted ? (
-        <ThankYouPage />
-      ) : (
-        <>
-          <Hero />
-          <SelfConnectionCheck />
-          <TargetAudience />
-          <Benefits />
-          <DifferenceSection />
-          <CoachSection />
-          <Testimonials />
-          <RegistrationForm onSuccess={() => setIsSubmitted(true)} />
-        </>
-      )}
+      <Hero />
+      <SelfConnectionCheck />
+      <TargetAudience />
+      <Benefits />
+      <DifferenceSection />
+      <CoachSection />
+      <Testimonials />
+      <RegistrationForm onSuccess={() => navigate('/thank-you')} />
       <Footer />
     </div>
+  );
+}
+
+function ThankYouRoute() {
+  return (
+    <div className="min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+      <Navbar />
+      <ThankYouPage />
+      <Footer />
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/thank-you" element={<ThankYouRoute />} />
+      </Routes>
+    </HashRouter>
   );
 }
