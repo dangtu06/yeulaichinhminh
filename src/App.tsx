@@ -28,7 +28,7 @@ import {
   Quote
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { HashRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import coachPortrait from "./coach-portrait.png";
 import logoQma from "./logo-qma.png";
 import tiktokLogo from "./tiktok-logo.png";
@@ -991,11 +991,11 @@ function ThankYouRoute() {
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/thank-you" element={<ThankYouRoute />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
